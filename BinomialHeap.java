@@ -17,8 +17,7 @@ public class BinomialHeap
      * Insert (key,info) into the heap and return the newly generated HeapItem.
      *
      */
-    public HeapItem insert(int key, String info)
-    {
+    public HeapItem insert(int key, String info){
 
     }
 
@@ -71,17 +70,35 @@ public class BinomialHeap
      */
     public void decreaseKey(HeapItem item, int diff)
     {
-        return; // should be replaced by student code
+        item.key = item.key - diff;
+        while(item.key < item.node.parent.getKey()){
+            item = swapFatherSon(item, item.node.parent.item);
+        }
+        if (this.min.getKey() > item.key){
+            this.min = item.node;
+        }
     }
 
+
+    public HeapItem swapFatherSon(HeapItem son, HeapItem father){
+        int sonKey = son.key;
+        String sonInfo = son.info;
+        int fatheKey = father.key;
+        String fatherInfo = father.info;
+        son.key = fatheKey;
+        son.info = fatherInfo;
+        father.key = sonKey;
+        father.info = sonInfo;
+        return father;
+    }
     /**
      *
      * Delete the item from the heap.
      *
      */
-    public void delete(HeapItem item)
-    {
-        return; // should be replaced by student code
+    public void delete(HeapItem item){
+        decreaseKey(item, item.key + 1);
+        this.deleteMin();
     }
 
     /**
@@ -101,7 +118,7 @@ public class BinomialHeap
      */
     public int size()
     {
-        return 42; // should be replaced by student code
+        return this.size;
     }
 
     /**
@@ -112,7 +129,7 @@ public class BinomialHeap
      */
     public boolean empty()
     {
-        return false; // should be replaced by student code
+        return this.size == 0;
     }
 
     /**
@@ -120,9 +137,18 @@ public class BinomialHeap
      * Return the number of trees in the heap.
      *
      */
-    public int numTrees()
-    {
-        return 0; // should be replaced by student code
+    public int numTrees() {
+        if (this.empty()){
+            return 0;
+        }
+        int treesNum = 1;
+        HeapNode last = this.last;// should be replaced by student code
+        HeapNode currentNode = last.next;
+        while (currentNode.getKey() != last.getKey()){
+            ++treesNum;
+            currentNode = currentNode.next;
+        }
+        return treesNum;
     }
 
     /**
