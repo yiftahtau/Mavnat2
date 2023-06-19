@@ -22,7 +22,14 @@ public class BinomialHeap
     }
 
     public HeapNode mergeTrees (HeapNode nodeA, HeapNode nodeB) {
-
+        if (nodeA.getKey() > nodeB.getKey())
+            return mergeTrees(nodeB, nodeA);
+        nodeB.next = nodeA.child.next;
+        nodeA.child.next = nodeB;
+        nodeA.child = nodeB;
+        nodeB.parent = nodeA;
+        nodeA.rank ++;
+        return nodeA;
     }
 
     public void mergeInto (HeapNode node) {
@@ -35,8 +42,11 @@ public class BinomialHeap
         HeapNode crnt = last.next;
         while (crnt.rank < node.rank)
             crnt = crnt.next;
-        if (crnt.rank == node.rank) {
-
+        if (crnt.rank == node.rank)
+            mergeInto(mergeTrees(crnt, node));
+        else {
+            node.next = crnt.next;
+            crnt.next = node;
         }
     }
 
