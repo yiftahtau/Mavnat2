@@ -119,7 +119,14 @@ public class BinomialHeap
      */
     public void meld(BinomialHeap heap2)
     {
-        return; // should be replaced by student code
+        HeapNode crnt = heap2.last.next;
+        while (true) {
+            HeapNode next = crnt.next;
+            mergeInto(crnt);
+            if (crnt == heap2.last)
+                break;
+            crnt = next;
+        }
     }
 
     /**
