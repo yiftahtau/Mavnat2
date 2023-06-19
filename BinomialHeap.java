@@ -22,9 +22,23 @@ public class BinomialHeap
 
     }
 
-    public void insertInto (HeapNode node) {
+    public HeapNode mergeTrees (HeapNode nodeA, HeapNode nodeB) {
+
+    }
+
+    public void mergeInto (HeapNode node) {
+        if (node.rank > last.rank) {
+            node.next = last.next;
+            last.next = node;
+            last = node;
+            return;
+        }
         HeapNode crnt = last.next;
-        while (crnt.rank != node.)
+        while (crnt.rank < node.rank)
+            crnt = crnt.next;
+        if (crnt.rank == node.rank) {
+
+        }
     }
 
     /**
@@ -116,9 +130,9 @@ public class BinomialHeap
      *
      */
     public class HeapNode{
-        public class HeapNode (){}
+        public HeapNode (){}
 
-        public class HeapNode (HeapNode parent, int key, String info){
+        public HeapNode (HeapNode parent, int key, String info){
 			this.item = new HeapItem(this, key, info);
 			this.parent = parent;
 			this.rank = 0;
@@ -133,8 +147,16 @@ public class BinomialHeap
             return item.key;
         }
 
-        public int getInfo () {
+        public String getInfo () {
             return item.info;
+        }
+
+        public void setKey (int key) {
+            item.key = key;
+        }
+
+        public void setInfo (String info) {
+            item.info = info;
         }
     }
 
