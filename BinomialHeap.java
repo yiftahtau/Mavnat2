@@ -18,7 +18,9 @@ public class BinomialHeap
      *
      */
     public HeapItem insert(int key, String info){
-
+        HeapNode node = new HeapNode(null, key, info);
+        mergeInto(node);
+        return node.item;
     }
 
     public HeapNode mergeTrees (HeapNode nodeA, HeapNode nodeB) {
@@ -55,9 +57,8 @@ public class BinomialHeap
      * Delete the minimal item
      *
      */
-    public void deleteMin()
-    {
-        return; // should be replaced by student code
+    public void deleteMin() {
+
 
     }
 
@@ -68,7 +69,7 @@ public class BinomialHeap
      */
     public HeapItem findMin()
     {
-        return null; // should be replaced by student code
+        return this.min.item; // should be replaced by student code
     }
 
     /**
