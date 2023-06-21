@@ -58,8 +58,40 @@ public class BinomialHeap
      *
      */
     public void deleteMin() {
-
-
+        if (!empty()) {
+            HeapNode nodeToDelete = this.min;
+            HeapNode previusNode = nodeToDelete;
+            HeapNode nodeInHeap = nodeToDelete.next; // iterate all tree for delete pointers to min
+            this.min = nodeInHeap;
+            while (!nodeInHeap.equals(nodeToDelete)) {
+                if (nodeInHeap.getKey() < this.min.getKey()) { //search for new min
+                    this.min = nodeInHeap;
+                }
+                previusNode = nodeInHeap;
+                nodeInHeap = nodeInHeap.next;
+            }
+            if (nodeToDelete.equals(this.last)){
+                this.last = previusNode;
+            }
+            previusNode.next = nodeToDelete.next; // disconnect min's tree from heap
+            this.size -= nodeToDelete.rank;
+            HeapNode bigSon = nodeToDelete.child;
+            HeapNode sonOfMin = nodeToDelete.child; // iterate min's sons and reconnect them to the heap
+            do {
+                sonOfMin.parent = null;
+                HeapNode nextNode = sonOfMin.next;
+                sonOfMin.next = null;
+                mergeInto(sonOfMin);
+                sonOfMin = nextNode;
+            }
+            while (!sonOfMin.equals(bigSon));{
+                sonOfMin.parent = null;
+                HeapNode nextNode = sonOfMin.next;
+                sonOfMin.next = null;
+                mergeInto(sonOfMin);
+                sonOfMin = nextNode;
+            }
+        }
     }
 
     /**
@@ -160,10 +192,10 @@ public class BinomialHeap
             return 0;
         }
         int treesNum = 1;
-        HeapNode last = this.last;// should be replaced by student code
+        HeapNode last = this.last;
         HeapNode currentNode = last.next;
         while (currentNode.getKey() != last.getKey()){
-            ++treesNum;
+            treesNum++;
             currentNode = currentNode.next;
         }
         return treesNum;
