@@ -35,6 +35,13 @@ public class BinomialHeap
     }
 
     public void mergeInto (HeapNode node) {
+        if (last == null) {
+            last = node;
+            min = node;
+            return;
+        }
+        if (node.getKey() < min.getKey())
+            min = node;
         if (node.rank > last.rank) {
             node.next = last.next;
             last.next = node;
