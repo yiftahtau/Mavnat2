@@ -226,6 +226,7 @@ public class BinomialHeap
 			this.item = new HeapItem(this, key, info);
 			this.parent = parent;
 			this.rank = 0;
+            this.next = this;
         }
         public HeapItem item;
         public HeapNode child;
