@@ -20,15 +20,17 @@ public class BinomialHeap
     public HeapItem insert(int key, String info){
         HeapNode node = new HeapNode(null, key, info);
         mergeInto(node);
-        this.size = this.size + 1;
         return node.item;
     }
 
-    public HeapNode mergeTrees (HeapNode nodeA, HeapNode nodeB) {
+
+    public static HeapNode mergeTrees (HeapNode nodeA, HeapNode nodeB) {
         if (nodeA.getKey() > nodeB.getKey())
             return mergeTrees(nodeB, nodeA);
-        nodeB.next = nodeA.child.next;
-        nodeA.child.next = nodeB;
+        if (nodeA.rank > 0) {
+            nodeB.next = nodeA.child.next;
+            nodeA.child.next = nodeB;
+        }
         nodeA.child = nodeB;
         nodeB.parent = nodeA;
         nodeA.rank ++;
@@ -36,6 +38,7 @@ public class BinomialHeap
     }
 
     public void mergeInto (HeapNode node) {
+        this.size += node.getSize();
         if (last == null) {
             last = node;
             min = node;
@@ -66,7 +69,7 @@ public class BinomialHeap
      *
      */
     public void deleteMin() {
-        if (!empty()) {
+        if (!this.empty()) {
             HeapNode nodeToDelete = this.min;
             HeapNode previusNode = nodeToDelete;
             HeapNode nodeInHeap = nodeToDelete.next; // iterate all tree for delete pointers to min
@@ -234,6 +237,7 @@ public class BinomialHeap
         public HeapNode parent;
         public int rank;
 
+
         public int getKey () {
             return item.key;
         }
@@ -244,6 +248,16 @@ public class BinomialHeap
 
         public void setKey (int key) {
             item.key = key;
+        }
+
+        private static int two_exp (int k) {
+            if (k == 0) return 1;
+            int b = two_exp(k / 2);
+            return b * b * (k % 2 == 1 ? 2 : 1);
+        }
+
+        public int getSize () {
+            return two_exp(rank);
         }
 
         public void setInfo (String info) {
