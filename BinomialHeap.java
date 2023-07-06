@@ -10,6 +10,8 @@ public class BinomialHeap
     public HeapNode last;
     public HeapNode min;
 
+    private int numTrees;
+
     /**
      *
      * pre: key > 0
@@ -41,10 +43,11 @@ public class BinomialHeap
     /*
     Add a Binomial Tree to the heap
      */
-    public void mergeInto (HeapNode node) {
+    private void mergeInto (HeapNode node) {
         if (last == null) { // The heap is empty - add the tree as is
             last = node;
             min = node;
+            numTrees = 1;
             return;
         }
         if (node.getKey() < min.getKey())
@@ -53,6 +56,7 @@ public class BinomialHeap
             node.next = last.next;
             last.next = node;
             last = node;
+            numTrees ++ ;
             return;
         }
         HeapNode crnt = last;
@@ -68,6 +72,7 @@ public class BinomialHeap
         else {
             node.next = crnt.next;
             crnt.next = node;
+            numTrees ++;
         }
     }
 
@@ -84,7 +89,7 @@ public class BinomialHeap
                 this.size = 0;
                 return;
             }
-            this.size -= 1;
+            this.size --;
             HeapNode nodeToDelete = this.min;
             HeapNode previusNode = nodeToDelete;
             HeapNode nodeInHeap = nodeToDelete.next; // iterate all tree for delete pointers to min
@@ -102,6 +107,7 @@ public class BinomialHeap
             previusNode.next = nodeToDelete.next; // disconnect min's tree from heap
             HeapNode bigSon = nodeToDelete.child;
             HeapNode sonOfMin = nodeToDelete.child; // iterate min's sons and reconnect them to the heap
+            numTrees --;
             do {
                 sonOfMin.parent = null;
                 HeapNode nextNode = sonOfMin.next;
@@ -167,7 +173,6 @@ public class BinomialHeap
     public void delete(HeapItem item){
         decreaseKey(item, item.key + 1);
         this.deleteMin();
-        this.size = this.size -1;
     }
 
     /**
@@ -178,16 +183,18 @@ public class BinomialHeap
     public void meld(BinomialHeap heap2)
     {
         if (!heap2.empty()) {
-            HeapNode crnt = heap2.last.next;
+            HeapNode crnt = heap2.last;
             int heap2Size = heap2.size;
-            while (true) {
-                HeapNode next = crnt.next;
+            HeapNode next = crnt.next;
+            crnt.next = null;
+            crnt = next;
+            while (crnt != null) {
+                next = crnt.next;
+                crnt.next = null;
                 mergeInto(crnt);
-                if (crnt == heap2.last)
-                    break;
                 crnt = next;
             }
-            this.size = this.size + heap2Size;
+            this.size += heap2Size;
         }
     }
 
@@ -218,17 +225,7 @@ public class BinomialHeap
      *
      */
     public int numTrees() {
-        if (this.empty()){
-            return 0;
-        }
-        int treesNum = 1;
-        HeapNode last = this.last;
-        HeapNode currentNode = last.next;
-        while (currentNode.getKey() != last.getKey()){
-            treesNum++;
-            currentNode = currentNode.next;
-        }
-        return treesNum;
+        return numTrees;
     }
 
     /**
