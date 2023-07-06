@@ -161,16 +161,18 @@ public class BinomialHeap
      */
     public void meld(BinomialHeap heap2)
     {
-        HeapNode crnt = heap2.last.next;
-        int heap2Size = heap2.size;
-        while (true) {
-            HeapNode next = crnt.next;
-            mergeInto(crnt);
-            if (crnt == heap2.last)
-                break;
-            crnt = next;
+        if (!heap2.empty()) {
+            HeapNode crnt = heap2.last.next;
+            int heap2Size = heap2.size;
+            while (true) {
+                HeapNode next = crnt.next;
+                mergeInto(crnt);
+                if (crnt == heap2.last)
+                    break;
+                crnt = next;
+            }
+            this.size = this.size + heap2Size;
         }
-        this.size = this.size + heap2Size;
     }
 
     /**
