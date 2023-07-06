@@ -78,6 +78,12 @@ public class BinomialHeap
      */
     public void deleteMin() {
         if (!this.empty()) {
+            if (this.size == 1){
+                this.min = null;
+                this.last = null;
+                this.size = 0;
+                return;
+            }
             this.size -= 1;
             HeapNode nodeToDelete = this.min;
             HeapNode previusNode = nodeToDelete;
@@ -122,6 +128,9 @@ public class BinomialHeap
      */
     public HeapItem findMin()
     {
+        if (this.min == null){
+            return null;
+        }
         return this.min.item; // should be replaced by student code
     }
 
@@ -135,7 +144,7 @@ public class BinomialHeap
     public void decreaseKey(HeapItem item, int diff)
     {
         item.key = item.key - diff;
-        while(item.key < item.node.parent.getKey()){
+        while(item.node.parent != null && item.key < item.node.parent.getKey()){
             item = swapFatherSon(item, item.node.parent.item);
         }
         if (this.min.getKey() > item.key){
