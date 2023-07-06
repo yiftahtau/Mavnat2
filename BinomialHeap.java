@@ -103,15 +103,10 @@ public class BinomialHeap
                 mergeInto(sonOfMin);
                 sonOfMin = nextNode;
             }
-            while (!sonOfMin.equals(bigSon));
-            {
-                sonOfMin.parent = null;
-                HeapNode nextNode = sonOfMin.next;
-                sonOfMin.next = null;
-                mergeInto(sonOfMin);
-                sonOfMin = nextNode;
-            }
-            this.size = this.size -1;
+            while (sonOfMin != bigSon);
+            sonOfMin.parent = null;
+            sonOfMin.next = null;
+            mergeInto(sonOfMin);
         }
     }
 
