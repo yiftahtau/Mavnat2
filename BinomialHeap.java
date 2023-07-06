@@ -20,6 +20,7 @@ public class BinomialHeap
     public HeapItem insert(int key, String info){
         HeapNode node = new HeapNode(null, key, info);
         mergeInto(node);
+        this.size ++;
         return node.item;
     }
 
@@ -37,26 +38,33 @@ public class BinomialHeap
         return nodeA;
     }
 
+    /*
+    Add a Binomial Tree to the heap
+     */
     public void mergeInto (HeapNode node) {
-        this.size += node.getSize();
-        if (last == null) {
+        if (last == null) { // The heap is empty - add the tree as is
             last = node;
             min = node;
             return;
         }
         if (node.getKey() < min.getKey())
             min = node;
-        if (node.rank > last.rank) {
+        if (node.rank > last.rank) { //add at the end
             node.next = last.next;
             last.next = node;
             last = node;
             return;
         }
-        HeapNode crnt = last.next;
-        while (crnt.rank < node.rank)
+        HeapNode crnt = last;
+        while (crnt.next.rank < node.rank)
             crnt = crnt.next;
-        if (crnt.rank == node.rank)
-            mergeInto(mergeTrees(crnt, node));
+        if (crnt.next.rank == node.rank) {
+            HeapNode toBeNext = crnt.next.next;
+            crnt.next.next = null;
+            HeapNode joint = mergeTrees(crnt.next, node);
+            crnt.next = joint;
+            joint.next = toBeNext;
+        }
         else {
             node.next = crnt.next;
             crnt.next = node;
@@ -70,22 +78,22 @@ public class BinomialHeap
      */
     public void deleteMin() {
         if (!this.empty()) {
+            this.size -= 1;
             HeapNode nodeToDelete = this.min;
             HeapNode previusNode = nodeToDelete;
             HeapNode nodeInHeap = nodeToDelete.next; // iterate all tree for delete pointers to min
             this.min = nodeInHeap;
-            while (!nodeInHeap.equals(nodeToDelete)) {
+            while (nodeInHeap != nodeToDelete) {
                 if (nodeInHeap.getKey() < this.min.getKey()) { //search for new min
                     this.min = nodeInHeap;
                 }
                 previusNode = nodeInHeap;
                 nodeInHeap = nodeInHeap.next;
             }
-            if (nodeToDelete.equals(this.last)){
+            if (nodeToDelete == this.last){
                 this.last = previusNode;
             }
             previusNode.next = nodeToDelete.next; // disconnect min's tree from heap
-            this.size -= nodeToDelete.rank;
             HeapNode bigSon = nodeToDelete.child;
             HeapNode sonOfMin = nodeToDelete.child; // iterate min's sons and reconnect them to the heap
             do {
@@ -95,7 +103,8 @@ public class BinomialHeap
                 mergeInto(sonOfMin);
                 sonOfMin = nextNode;
             }
-            while (!sonOfMin.equals(bigSon));{
+            while (!sonOfMin.equals(bigSon));
+            {
                 sonOfMin.parent = null;
                 HeapNode nextNode = sonOfMin.next;
                 sonOfMin.next = null;
