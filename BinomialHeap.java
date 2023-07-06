@@ -20,6 +20,7 @@ public class BinomialHeap
     public HeapItem insert(int key, String info){
         HeapNode node = new HeapNode(null, key, info);
         mergeInto(node);
+        this.size = this.size + 1;
         return node.item;
     }
 
@@ -98,6 +99,7 @@ public class BinomialHeap
                 mergeInto(sonOfMin);
                 sonOfMin = nextNode;
             }
+            this.size = this.size -1;
         }
     }
 
@@ -149,6 +151,7 @@ public class BinomialHeap
     public void delete(HeapItem item){
         decreaseKey(item, item.key + 1);
         this.deleteMin();
+        this.size = this.size -1;
     }
 
     /**
@@ -159,6 +162,7 @@ public class BinomialHeap
     public void meld(BinomialHeap heap2)
     {
         HeapNode crnt = heap2.last.next;
+        int heap2Size = heap2.size;
         while (true) {
             HeapNode next = crnt.next;
             mergeInto(crnt);
@@ -166,6 +170,7 @@ public class BinomialHeap
                 break;
             crnt = next;
         }
+        this.size = this.size + heap2Size;
     }
 
     /**
